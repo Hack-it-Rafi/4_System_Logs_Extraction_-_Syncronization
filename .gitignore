@@ -2,3 +2,4 @@ monitoring_outputs
 packet_captures
 screen_recordings
 system_logs
+.env
