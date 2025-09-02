@@ -9,7 +9,6 @@ from datetime import datetime
 import sys
 
 def get_actual_screen_size():
-    # Get actual physical resolution (bypassing DPI scaling)
     hdesktop = win32gui.GetDesktopWindow()
     left, top, right, bottom = win32gui.GetWindowRect(hdesktop)
     width = right - left
@@ -17,11 +16,9 @@ def get_actual_screen_size():
     return width, height
 
 def screen_capture(output_folder, timestamp):
-    # Get screen resolution
     screen_width, screen_height = get_actual_screen_size()
     print(f"Detected Screen resolution: {screen_width}x{screen_height}")
 
-    # Override resolution if needed
     screen_width = 1920
     screen_height = 1080
 
@@ -33,7 +30,6 @@ def screen_capture(output_folder, timestamp):
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_file, fourcc, fps, (screen_width, screen_height))
 
-    # Prepare capture objects
     hdesktop = win32gui.GetDesktopWindow()
     desktop_dc = win32gui.GetWindowDC(hdesktop)
     dc_obj = win32ui.CreateDCFromHandle(desktop_dc)
@@ -42,7 +38,6 @@ def screen_capture(output_folder, timestamp):
     bmp.CreateCompatibleBitmap(dc_obj, screen_width, screen_height)
     cdc.SelectObject(bmp)
 
-    # Calculate exact number of frames to capture
     total_frames = int(fps * segment_duration)
     frame_count = 0
 
@@ -51,7 +46,6 @@ def screen_capture(output_folder, timestamp):
     while frame_count < total_frames:
         loop_start = time.time()
 
-        # Capture frame
         cdc.BitBlt((0, 0), (screen_width, screen_height), dc_obj, (0, 0), win32con.SRCCOPY)
         bmp_str = bmp.GetBitmapBits(True)
         img = np.frombuffer(bmp_str, dtype='uint8')
@@ -61,12 +55,10 @@ def screen_capture(output_folder, timestamp):
         out.write(img)
         frame_count += 1
 
-        # Maintain FPS
         elapsed = time.time() - loop_start
         delay = max(0, (1 / fps) - elapsed)
         time.sleep(delay)
 
-    # Cleanup for this segment
     out.release()
     win32gui.DeleteObject(bmp.GetHandle())
     cdc.DeleteDC()

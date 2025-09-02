@@ -1,0 +1,182 @@
+[
+    {
+        "id": 44576,
+        "timestamp": "2025-09-02T15:45:33.711000+00:00",
+        "duration": 60.041,
+        "data": {
+            "url": "https://classroom.google.com/u/1/?pli=1",
+            "title": "Home",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 17
+        }
+    },
+    {
+        "id": 44546,
+        "timestamp": "2025-09-02T15:36:22.835000+00:00",
+        "duration": 550.876,
+        "data": {
+            "url": "https://chatgpt.com/c/68b70d8b-74e4-8329-8cfc-aba50259de6a",
+            "title": "Event filter issue",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 16
+        }
+    },
+    {
+        "id": 44532,
+        "timestamp": "2025-09-02T15:31:58.061000+00:00",
+        "duration": 264.774,
+        "data": {
+            "url": "http://localhost:5600/api/0/buckets/aw-watcher-web-chrome_Something-Great-coming/events",
+            "title": "localhost:5600/api/0/buckets/aw-watcher-web-chrome_Something-Great-coming/events",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 16
+        }
+    },
+    {
+        "id": 44529,
+        "timestamp": "2025-09-02T15:31:33.096000+00:00",
+        "duration": 24.964,
+        "data": {
+            "url": "https://chatgpt.com/c/68b70d8b-74e4-8329-8cfc-aba50259de6a",
+            "title": "Event filter issue",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 14
+        }
+    },
+    {
+        "id": 44514,
+        "timestamp": "2025-09-02T15:28:32.962000+00:00",
+        "duration": 180.134,
+        "data": {
+            "url": "https://chatgpt.com/?model=auto",
+            "title": "ChatGPT",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 14
+        }
+    },
+    {
+        "id": 44510,
+        "timestamp": "2025-09-02T15:27:52.652000+00:00",
+        "duration": 40.31,
+        "data": {
+            "url": "https://chatgpt.com/c/68b6fb24-3724-8330-967f-9806744253de",
+            "title": "Filter browser logs by time",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 14
+        }
+    },
+    {
+        "id": 44509,
+        "timestamp": "2025-09-02T15:27:32.921000+00:00",
+        "duration": 19.73,
+        "data": {
+            "url": "https://mail.google.com/mail/u/2/#inbox/FMfcgzQcpdgZQCQfXgWwmcqspPBchZtB",
+            "title": "National Policy Competition 2025 (Youth Participation In Politics and the Future of Democracy) - bsse1323@iit.du.ac.bd - Institute of Information Technology, DU Mail",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 14
+        }
+    },
+    {
+        "id": 44500,
+        "timestamp": "2025-09-02T15:26:28.236000+00:00",
+        "duration": 64.685,
+        "data": {
+            "url": "https://github.com/ShahjalalShohag/code-library/tree/main/Data%20Structures",
+            "title": "code-library/Data Structures at main \u00b7 ShahjalalShohag/code-library",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 13
+        }
+    },
+    {
+        "id": 44498,
+        "timestamp": "2025-09-02T15:26:27.347000+00:00",
+        "duration": 0.888,
+        "data": {
+            "url": "https://mail.google.com/mail/u/2/#inbox",
+            "title": "Inbox (1,330) - bsse1323@iit.du.ac.bd - Institute of Information Technology, DU Mail",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 14
+        }
+    },
+    {
+        "id": 44497,
+        "timestamp": "2025-09-02T15:26:25.720000+00:00",
+        "duration": 1.626,
+        "data": {
+            "url": "https://chat.deepseek.com/a/chat/s/b4912373-93c9-4eb9-8ef6-db86a1a874ef",
+            "title": "Fixing ActivityWatch Timestamp and Bucket Issues - DeepSeek",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 15
+        }
+    },
+    {
+        "id": 44494,
+        "timestamp": "2025-09-02T15:26:24.755000+00:00",
+        "duration": 0.964,
+        "data": {
+            "url": "https://docs.activitywatch.net/en/latest/getting-started.html",
+            "title": "Getting started",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 16
+        }
+    },
+    {
+        "id": 44493,
+        "timestamp": "2025-09-02T15:26:24.083000+00:00",
+        "duration": 0.671,
+        "data": {
+            "url": "http://localhost:5600/#/home",
+            "title": "ActivityWatch",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 17
+        }
+    },
+    {
+        "id": 44460,
+        "timestamp": "2025-09-02T15:18:32.419000+00:00",
+        "duration": 471.671,
+        "data": {
+            "url": "https://grok.com/chat/899208a1-13f7-49af-9fc3-376a6dc4b6a8",
+            "title": "Local Browser Log Time Filtering - Grok",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 17
+        }
+    },
+    {
+        "id": 44420,
+        "timestamp": "2025-09-02T15:07:08.202000+00:00",
+        "duration": 597.588,
+        "data": {
+            "url": "https://grok.com/chat/899208a1-13f7-49af-9fc3-376a6dc4b6a8",
+            "title": "Local Browser Log Time Filtering - Grok",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 17
+        }
+    },
+    {
+        "id": 44414,
+        "timestamp": "2025-09-02T15:06:54.330000+00:00",
+        "duration": 13.871,
+        "data": {
+            "url": "https://chatgpt.com/c/68b6fb24-3724-8330-967f-9806744253de",
+            "title": "Filter browser logs by time",
+            "audible": false,
+            "incognito": false,
+            "tabCount": 17
+        }
+    }
+]
