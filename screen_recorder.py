@@ -3,11 +3,10 @@ import numpy as np
 import win32gui
 import win32ui
 import win32con
-import win32api
 import time
 import os
 from datetime import datetime
-
+import sys
 
 def get_actual_screen_size():
     # Get actual physical resolution (bypassing DPI scaling)
@@ -17,74 +16,73 @@ def get_actual_screen_size():
     height = bottom - top
     return width, height
 
-
-def screen_capture():
+def screen_capture(output_folder, timestamp):
     # Get screen resolution
     screen_width, screen_height = get_actual_screen_size()
     print(f"Detected Screen resolution: {screen_width}x{screen_height}")
 
-    # You can override resolution if needed
+    # Override resolution if needed
     screen_width = 1920
     screen_height = 1080
 
     fps = 10.0
     segment_duration = 20 * 60  # seconds
-    output_dir = "screen_recordings"
 
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    os.makedirs(output_folder, exist_ok=True)
+    output_file = os.path.join(output_folder, f"screen_record_{timestamp}.avi")
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    out = cv2.VideoWriter(output_file, fourcc, fps, (screen_width, screen_height))
 
-    while True:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_file = os.path.join(output_dir, f"screen_record_{timestamp}.avi")
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter(output_file, fourcc, fps, (screen_width, screen_height))
+    # Prepare capture objects
+    hdesktop = win32gui.GetDesktopWindow()
+    desktop_dc = win32gui.GetWindowDC(hdesktop)
+    dc_obj = win32ui.CreateDCFromHandle(desktop_dc)
+    cdc = dc_obj.CreateCompatibleDC()
+    bmp = win32ui.CreateBitmap()
+    bmp.CreateCompatibleBitmap(dc_obj, screen_width, screen_height)
+    cdc.SelectObject(bmp)
 
-        # Prepare capture objects
-        hdesktop = win32gui.GetDesktopWindow()
-        desktop_dc = win32gui.GetWindowDC(hdesktop)
-        dc_obj = win32ui.CreateDCFromHandle(desktop_dc)
-        cdc = dc_obj.CreateCompatibleDC()
-        bmp = win32ui.CreateBitmap()
-        bmp.CreateCompatibleBitmap(dc_obj, screen_width, screen_height)
-        cdc.SelectObject(bmp)
+    # Calculate exact number of frames to capture
+    total_frames = int(fps * segment_duration)
+    frame_count = 0
 
-        # Calculate exact number of frames to capture
-        total_frames = int(fps * segment_duration)
-        frame_count = 0
+    print(f"Recording started: {output_file}")
 
-        print(f"Recording started: {output_file}")
+    while frame_count < total_frames:
+        loop_start = time.time()
 
-        while frame_count < total_frames:
-            loop_start = time.time()
+        # Capture frame
+        cdc.BitBlt((0, 0), (screen_width, screen_height), dc_obj, (0, 0), win32con.SRCCOPY)
+        bmp_str = bmp.GetBitmapBits(True)
+        img = np.frombuffer(bmp_str, dtype='uint8')
+        img.shape = (screen_height, screen_width, 4)
 
-            # Capture frame
-            cdc.BitBlt((0, 0), (screen_width, screen_height), dc_obj, (0, 0), win32con.SRCCOPY)
-            bmp_str = bmp.GetBitmapBits(True)
-            img = np.frombuffer(bmp_str, dtype='uint8')
-            img.shape = (screen_height, screen_width, 4)
+        img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+        out.write(img)
+        frame_count += 1
 
-            img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
-            out.write(img)
-            frame_count += 1
+        # Maintain FPS
+        elapsed = time.time() - loop_start
+        delay = max(0, (1 / fps) - elapsed)
+        time.sleep(delay)
 
-            # Maintain FPS
-            elapsed = time.time() - loop_start
-            delay = max(0, (1 / fps) - elapsed)
-            time.sleep(delay)
+    # Cleanup for this segment
+    out.release()
+    win32gui.DeleteObject(bmp.GetHandle())
+    cdc.DeleteDC()
+    dc_obj.DeleteDC()
+    win32gui.ReleaseDC(hdesktop, desktop_dc)
 
-        # Cleanup for this segment
-        out.release()
-        win32gui.DeleteObject(bmp.GetHandle())
-        cdc.DeleteDC()
-        dc_obj.DeleteDC()
-        win32gui.ReleaseDC(hdesktop, desktop_dc)
-
-        print(f"Saved recording: {output_file}")
-
+    print(f"Saved recording: {output_file}")
 
 if __name__ == "__main__":
     try:
-        screen_capture()
+        if len(sys.argv) > 2:
+            output_folder = sys.argv[1]
+            timestamp = sys.argv[2]
+            screen_capture(output_folder, timestamp)
+        else:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            screen_capture("screen_recordings", timestamp)
     except KeyboardInterrupt:
         print("Screen recording stopped by user")

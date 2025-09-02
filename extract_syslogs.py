@@ -1,8 +1,11 @@
 import os
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from elasticsearch import Elasticsearch
 import json
+import sys
+
+LOCAL_OFFSET = 6  # UTC+6
 
 def get_elasticsearch_client(host="localhost", port=9200, username="elastic", password="Faizalove13"):
     es = Elasticsearch(
@@ -15,6 +18,7 @@ def get_elasticsearch_client(host="localhost", port=9200, username="elastic", pa
 
 def query_and_save_logs(es, index_pattern, start_time, end_time, output_file):
     """Fetch all logs in the given time range and write directly to file."""
+    print(f"Querying logs from {start_time.isoformat()} to {end_time.isoformat()}")
     query = {
         "query": {
             "bool": {
@@ -36,12 +40,11 @@ def query_and_save_logs(es, index_pattern, start_time, end_time, output_file):
 
     try:
         with open(output_file, 'w') as f:
-            # Initial search with scroll
             page = es.search(
                 index=index_pattern,
                 body=query,
-                scroll="2m",    # Keep search context alive for 2 minutes
-                size=5000       # Fetch 5k logs at a time
+                scroll="2m",
+                size=5000
             )
 
             sid = page["_scroll_id"]
@@ -55,12 +58,10 @@ def query_and_save_logs(es, index_pattern, start_time, end_time, output_file):
                     f.write("\n")
                     total_logs += 1
 
-                # Get next batch
                 page = es.scroll(scroll_id=sid, scroll="2m")
                 sid = page["_scroll_id"]
                 hits = page["hits"]["hits"]
 
-            # Clear scroll context
             es.clear_scroll(scroll_id=sid)
 
         print(f"Saved {total_logs} logs to: {output_file}")
@@ -69,31 +70,35 @@ def query_and_save_logs(es, index_pattern, start_time, end_time, output_file):
         print(f"Error fetching logs: {e}")
 
 def main():
-    # Config
     es_host = "localhost"
     es_port = 9200
     index_pattern = "winlogbeat-*"
-    output_dir = "system_logs"
     interval_minutes = 20
 
-    es = get_elasticsearch_client(es_host, es_port, username="elastic", password="Faizalove13")
+    es = get_elasticsearch_client(es_host, es_port)
 
-    while True:
-        # Calculate 20-minute interval
+    if len(sys.argv) > 2:
+        output_folder = sys.argv[1]
+        timestamp = sys.argv[2]
+        print(f"log script time: {timestamp}")
+        
+        interval_start_local = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
+        
+        interval_start = interval_start_local - timedelta(hours=LOCAL_OFFSET)
+        interval_end = interval_start + timedelta(minutes=interval_minutes)
+        
+        print(f"Extracting logs from {interval_start} to {interval_end}")
+        
+        output_file = os.path.join(output_folder, f"syslogs_{timestamp}.json")
+        query_and_save_logs(es, index_pattern, interval_start, interval_end, output_file)
+    else:
         current_time = datetime.utcnow()
         interval_start = current_time - timedelta(seconds=current_time.second, microseconds=current_time.microsecond)
         interval_start -= timedelta(minutes=interval_start.minute % interval_minutes)
         interval_end = interval_start + timedelta(minutes=interval_minutes)
-
         timestamp = interval_start.strftime("%Y%m%d_%H%M%S")
-        output_file = os.path.join(output_dir, f"syslogs_{timestamp}.json")
-
+        output_file = os.path.join("system_logs", f"syslogs_{timestamp}.json")
         query_and_save_logs(es, index_pattern, interval_start, interval_end, output_file)
-
-        # Sleep until next interval
-        sleep_seconds = (interval_end - datetime.utcnow()).total_seconds()
-        if sleep_seconds > 0:
-            time.sleep(sleep_seconds)
 
 if __name__ == "__main__":
     try:
