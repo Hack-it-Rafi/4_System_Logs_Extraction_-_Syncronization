@@ -4,10 +4,18 @@ from datetime import datetime, timedelta, timezone
 from elasticsearch import Elasticsearch
 import json
 import sys
+from dotenv import load_dotenv  # Import dotenv to load environment variables
 
-LOCAL_OFFSET = 6  # UTC+6
+# Load environment variables from .env file
+load_dotenv()
 
-def get_elasticsearch_client(host="localhost", port=9200, username="elastic", password="Faizalove13"):
+LOCAL_OFFSET = 6  
+
+def get_elasticsearch_client(host="localhost", port=9200):
+    # Fetch username and password from environment variables
+    username = os.getenv("ELASTIC_USERNAME", "elastic")
+    password = os.getenv("ELASTIC_PASSWORD", "password")
+    
     es = Elasticsearch(
         [{'host': host, 'port': port, 'scheme': 'http'}],
         basic_auth=(username, password)
