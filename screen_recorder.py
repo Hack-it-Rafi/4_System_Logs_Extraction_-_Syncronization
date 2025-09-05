@@ -16,14 +16,12 @@ def get_actual_screen_size():
     return width, height
 
 def screen_capture(output_folder, timestamp):
+
     screen_width, screen_height = get_actual_screen_size()
     print(f"Detected Screen resolution: {screen_width}x{screen_height}")
 
-    screen_width = 1920
-    screen_height = 1080
-
     fps = 10.0
-    segment_duration = 20 * 60  # seconds
+    segment_duration = 20 * 60  # 20 minutes in seconds
 
     os.makedirs(output_folder, exist_ok=True)
     output_file = os.path.join(output_folder, f"screen_record_{timestamp}.avi")

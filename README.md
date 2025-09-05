@@ -29,20 +29,9 @@ This project provides scripts for extracting system logs, browser logs, monitori
    ```
 
 ### Usage
-Run any of the scripts as needed. For example, to extract system logs:
+Just run the main script to start monitoring and extracting logs:
 ```powershell
-python extract_syslogs.py
-```
-
-## Directory Structure
-```
-clock.py
-extract_browser_logs.py
-extract_syslogs.py
-monitoring_controller.py
-packet_capture.py
-screen_recorder.py
-logs/
+python main.py
 ```
 
 ## License

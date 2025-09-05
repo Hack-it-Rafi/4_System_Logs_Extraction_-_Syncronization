@@ -90,10 +90,14 @@ def main():
 
     print("Available buckets:", buckets)
 
-    
-    if "aw-watcher-web-chrome_Something-Great-coming" in buckets:
-        bucket_id = "aw-watcher-web-chrome_Something-Great-coming"
-    else:
+    # Find any Chrome or Firefox browser log bucket
+    bucket_id = None
+    for b in buckets:
+        if b.startswith("aw-watcher-web-chrome") or b.startswith("aw-watcher-web-firefox"):
+            bucket_id = b
+            break
+
+    if not bucket_id:
         print("No supported browser watcher found (expected -firefox or -chrome).")
         sys.exit(1)
 
