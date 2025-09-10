@@ -3,24 +3,27 @@ import numpy as np
 import win32gui
 import win32ui
 import win32con
-import win32api
 import time
 import os
 from datetime import datetime
 import sys
 
 def get_actual_screen_size():
-    width = win32api.GetSystemMetrics(0)
-    height = win32api.GetSystemMetrics(1)
+    hdesktop = win32gui.GetDesktopWindow()
+    left, top, right, bottom = win32gui.GetWindowRect(hdesktop)
+    width = right - left
+    height = bottom - top
     return width, height
 
 def screen_capture(output_folder, timestamp):
-
     screen_width, screen_height = get_actual_screen_size()
     print(f"Detected Screen resolution: {screen_width}x{screen_height}")
 
+    screen_width = 1920
+    screen_height = 1080
+
     fps = 10.0
-    segment_duration = 20 * 60  # 20 minutes in seconds
+    segment_duration = 20 * 60  # seconds
 
     os.makedirs(output_folder, exist_ok=True)
     output_file = os.path.join(output_folder, f"screen_record_{timestamp}.avi")
@@ -46,12 +49,7 @@ def screen_capture(output_folder, timestamp):
         cdc.BitBlt((0, 0), (screen_width, screen_height), dc_obj, (0, 0), win32con.SRCCOPY)
         bmp_str = bmp.GetBitmapBits(True)
         img = np.frombuffer(bmp_str, dtype='uint8')
-        # Ensure the shape matches the bitmap size (height, width, 4)
-        try:
-            img = img.reshape((screen_height, screen_width, 4))
-        except Exception as e:
-            print(f"Error reshaping image: {e}, buffer size: {img.size}, expected: {screen_height*screen_width*4}")
-            continue
+        img.shape = (screen_height, screen_width, 4)
 
         img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
         out.write(img)

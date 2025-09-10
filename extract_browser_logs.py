@@ -77,8 +77,8 @@ def main():
         interval_minutes = 50
     
     try:
-        end_time = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
-        start_time = end_time - timedelta(minutes=interval_minutes)
+        start_time = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
+        end_time = start_time + timedelta(minutes=interval_minutes)
     except ValueError as e:
         print(f"Error parsing timestamp: {e}")
         sys.exit(1)
@@ -90,14 +90,10 @@ def main():
 
     print("Available buckets:", buckets)
 
-    # Find any Chrome or Firefox browser log bucket
-    bucket_id = None
-    for b in buckets:
-        if b.startswith("aw-watcher-web-chrome") or b.startswith("aw-watcher-web-firefox"):
-            bucket_id = b
-            break
-
-    if not bucket_id:
+    
+    if "aw-watcher-web-chrome_Something-Great-coming" in buckets:
+        bucket_id = "aw-watcher-web-chrome_Something-Great-coming"
+    else:
         print("No supported browser watcher found (expected -firefox or -chrome).")
         sys.exit(1)
 
