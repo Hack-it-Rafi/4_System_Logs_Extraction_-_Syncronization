@@ -3,3 +3,4 @@ packet_captures
 screen_recordings
 system_logs
 .env
+logs

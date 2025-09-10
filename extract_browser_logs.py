@@ -77,8 +77,8 @@ def main():
         interval_minutes = 50
     
     try:
-        end_time = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
-        start_time = end_time - timedelta(minutes=interval_minutes)
+        start_time = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
+        end_time = start_time + timedelta(minutes=interval_minutes)
     except ValueError as e:
         print(f"Error parsing timestamp: {e}")
         sys.exit(1)
