@@ -63,7 +63,7 @@ def main():
         run_script(SCREEN_RECORDING_SCRIPT, output_folder, timestamp)
 
         print(" -> Starting packet capture...")
-        run_script(PACKET_CAPTURE_SCRIPT, output_folder, timestamp, "5")
+        run_script(PACKET_CAPTURE_SCRIPT, output_folder, timestamp)
 
         time.sleep(INTERVAL_MINUTES * 60)
 
