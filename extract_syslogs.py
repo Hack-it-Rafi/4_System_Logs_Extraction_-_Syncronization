@@ -81,7 +81,7 @@ def main():
     es_host = "localhost"
     es_port = 9200
     index_pattern = "winlogbeat-*"
-    interval_minutes = 20
+    interval_minutes = 2
 
     es = get_elasticsearch_client(es_host, es_port)
 
@@ -101,9 +101,11 @@ def main():
         query_and_save_logs(es, index_pattern, interval_start, interval_end, output_file)
     else:
         current_time = datetime.utcnow()
-        interval_start = current_time - timedelta(seconds=current_time.second, microseconds=current_time.microsecond)
-        interval_start -= timedelta(minutes=interval_start.minute % interval_minutes)
-        interval_end = interval_start + timedelta(minutes=interval_minutes)
+        # Calculate the end of the previous complete interval
+        interval_end = current_time - timedelta(seconds=current_time.second, microseconds=current_time.microsecond)
+        interval_end -= timedelta(minutes=interval_end.minute % interval_minutes)
+        # Calculate the start of the previous interval
+        interval_start = interval_end - timedelta(minutes=interval_minutes)
         timestamp = interval_start.strftime("%Y%m%d_%H%M%S")
         output_file = os.path.join("system_logs", f"syslogs_{timestamp}.json")
         query_and_save_logs(es, index_pattern, interval_start, interval_end, output_file)
